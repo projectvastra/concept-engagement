@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# Define environment variable for VASTRA root path
+export VASTRA_ROOT=~/vastra
+
+# Function to create a repository or reuse if it already exists
+create_or_reuse_repo() {
+  repo_name=$1
+  visibility=$2
+
+  # Check if the repository already exists
+  if gh repo view "$repo_name" &> /dev/null; then
+    echo "Repository '$repo_name' already exists. Reusing."
+  else
+    gh repo create "$repo_name" --$visibility
+  fi
+}
+
+# Function to populate a repository with files and content
+populate_repo() {
+  repo_name=$1
+  license_url=$2
+  author_name=$3
+  author_url=$4
+
+  # Clone the repository locally and update remote origin URL
+  git clone --quiet "https://github.com/$repo_name.git" "$VASTRA_ROOT/$repo_name"
+  cd "$VASTRA_ROOT/$repo_name"
+  git remote set-url origin "https://github.com/$repo_name.git"
+
+  # Initialize Git and set up LICENSE and README files
+  git init
+  echo "# Conceptualization and Engagement" >> README.md
+  curl -o LICENSE "$license_url"
+
+  # Add additional files, disclaimers, guidelines, etc.
+  echo "# Contributor Guidelines\n\nPlease review the guidelines before contributing." >> CONTRIBUTING.md
+  echo "# Member Conduct Guidelines\n\nGuidelines for maintaining a respectful environment." >> CODE_OF_CONDUCT.md
+  echo "All disputes are subject to the jurisdiction of courts in Hyderabad, India." > DISCLAIMER.txt
+  echo "No personal data should be shared, and we do not support specific regulations like GDPR." >> DISCLAIMER.txt
+
+  # Customize README and other files
+  echo "Copyright $author_name, $author_url" >> README.md
+
+  # Add and commit files
+  git add .
+  git commit -m "Initial commit"
+
+  # Set up remote repository and push changes
+  git branch -M main
+  git push -u origin main
+
+  # Return to the previous directory
+  cd "$VASTRA_ROOT"
+}
+
+# Create and populate the repositories
+create_or_reuse_repo "projectvastra/concept-engagement" "public"
+populate_repo "projectvastra/concept-engagement" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/fabric-tech-design" "public"
+populate_repo "projectvastra/fabric-tech-design" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/fabric-integrity" "public"
+populate_repo "projectvastra/fabric-integrity" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/compatibility-testing" "public"
+populate_repo "projectvastra/compatibility-testing" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/ethical-ai-integration" "public"
+populate_repo "projectvastra/ethical-ai-integration" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/inclusive-research" "public"
+populate_repo "projectvastra/inclusive-research" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/business-models" "public"
+populate_repo "projectvastra/business-models" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/ip-legal-framework" "public"
+populate_repo "projectvastra/ip-legal-framework" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/cross-cultural-engagement" "public"
+populate_repo "projectvastra/cross-cultural-engagement" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+create_or_reuse_repo "projectvastra/economic-sustainability" "public"
+populate_repo "projectvastra/economic-sustainability" "https://www.gnu.org/licenses/gpl-3.0.en.html" "Abhishek Choudhary" "https://bit.ly/cognitist"
+
+# End of script
+
